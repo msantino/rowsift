@@ -35,7 +35,7 @@ Early development. The package is not published yet and the API will change befo
 | Step | State |
 |---|---|
 | Read | available: the function `rowsift.read(...)` turns CSV, XLSX and XLS bytes into a grid of text cells and a report, under explicit limits. Import it with `from rowsift import read, ReadLimits`. XLSX and XLS need the `excel` extra |
-| Profile | not started |
+| Profile | available: the function `rowsift.profile(table)` finds the header, skips rows that are not data with a code, and gives each column a kind with its share, counts, the low-cardinality signal and masked samples. Thresholds are `ProfileOptions` |
 | Clean | available: one cleaner per kind, `clean.value` to dispatch by kind, masking functions |
 | Map | not started |
 
