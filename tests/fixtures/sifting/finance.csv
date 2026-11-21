@@ -1,0 +1,6 @@
+Nome;CPF;Valor;Data;E-mail
+Ana Lima;529.982.247-25;"1.234,50";05/03/2025;ana@example.test
+Bia Souza;111.444.777-35;R$ 80,00;2025-04-01;bia.example.test
+Caio Dias;123.456.789-00;10,5;01/13/2025;caio@example.test
+;111444777;"2.000,00";15/05/25;dudaexample.test
+Total;;"3.324,50";;

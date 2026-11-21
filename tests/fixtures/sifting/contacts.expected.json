@@ -1,0 +1,192 @@
+{
+  "fields": [
+    {
+      "key": "name",
+      "kind": "name",
+      "required": true,
+      "aliases": [
+        "cliente"
+      ]
+    },
+    {
+      "key": "phone",
+      "kind": "phone",
+      "required": true,
+      "aliases": [
+        "celular"
+      ]
+    },
+    {
+      "key": "birthday",
+      "kind": "day_month",
+      "aliases": [
+        "niver"
+      ]
+    }
+  ],
+  "expected": {
+    "rows": [
+      {
+        "number": 4,
+        "values": {
+          "name": "Ana Lima",
+          "phone": "+5511999990001",
+          "birthday": {
+            "day": 12,
+            "month": 3
+          }
+        },
+        "extras": {
+          "turno": "manha",
+          "obs": "vip"
+        },
+        "changes": {
+          "name": [
+            {
+              "code": "case_changed",
+              "data": {}
+            }
+          ]
+        },
+        "issues": {}
+      },
+      {
+        "number": 5,
+        "values": {
+          "name": "Bia Souza",
+          "phone": "+5511988880002",
+          "birthday": {
+            "day": 5,
+            "month": 11
+          }
+        },
+        "extras": {
+          "turno": "noite",
+          "obs": ""
+        },
+        "changes": {
+          "name": [
+            {
+              "code": "case_changed",
+              "data": {}
+            }
+          ],
+          "phone": [
+            {
+              "code": "ninth_digit_inserted",
+              "data": {}
+            }
+          ]
+        },
+        "issues": {}
+      },
+      {
+        "number": 8,
+        "values": {
+          "name": "Edu Rocha",
+          "phone": "+5511999990005",
+          "birthday": null
+        },
+        "extras": {
+          "turno": "manha",
+          "obs": ""
+        },
+        "changes": {},
+        "issues": {
+          "birthday": {
+            "code": "invalid_date",
+            "data": {}
+          }
+        }
+      },
+      {
+        "number": 10,
+        "values": {
+          "name": "Fabi Nunes",
+          "phone": "+5511999990001",
+          "birthday": {
+            "day": 7,
+            "month": 7
+          }
+        },
+        "extras": {
+          "turno": "noite",
+          "obs": "dois numeros"
+        },
+        "changes": {
+          "phone": [
+            {
+              "code": "multiple_values",
+              "data": {
+                "count": 2
+              }
+            }
+          ]
+        },
+        "issues": {}
+      }
+    ],
+    "rejected": [
+      {
+        "number": 6,
+        "field": "phone",
+        "issue": {
+          "code": "truncated",
+          "data": {
+            "digits": 10
+          }
+        }
+      },
+      {
+        "number": 7,
+        "field": "phone",
+        "issue": {
+          "code": "required_missing",
+          "data": {}
+        }
+      },
+      {
+        "number": 9,
+        "field": "name",
+        "issue": {
+          "code": "required_missing",
+          "data": {}
+        }
+      }
+    ],
+    "summary": {
+      "data_rows": 7,
+      "kept": 4,
+      "rejected": 3,
+      "fields": {
+        "name": {
+          "filled": 6,
+          "changes": {
+            "case_changed": 2
+          },
+          "issues": {
+            "required_missing": 1
+          }
+        },
+        "phone": {
+          "filled": 5,
+          "changes": {
+            "ninth_digit_inserted": 1,
+            "multiple_values": 1
+          },
+          "issues": {
+            "truncated": 1,
+            "required_missing": 1
+          }
+        },
+        "birthday": {
+          "filled": 6,
+          "changes": {},
+          "issues": {
+            "invalid_date": 1
+          }
+        }
+      }
+    }
+  }
+}

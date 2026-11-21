@@ -1,0 +1,68 @@
+{
+  "fields": [
+    {
+      "key": "name",
+      "kind": "name",
+      "required": true,
+      "aliases": [
+        "nome"
+      ]
+    },
+    {
+      "key": "phone",
+      "kind": "phone",
+      "required": true,
+      "aliases": [
+        "telefone"
+      ]
+    }
+  ],
+  "options": {
+    "require_mobile": true
+  },
+  "expected": {
+    "rows": [
+      {
+        "number": 2,
+        "values": {
+          "name": "João da silva",
+          "phone": "+5521988880001"
+        },
+        "extras": {
+          "endereco": "Rua A"
+        },
+        "changes": {},
+        "issues": {}
+      }
+    ],
+    "rejected": [
+      {
+        "number": 3,
+        "field": "phone",
+        "issue": {
+          "code": "not_mobile",
+          "data": {}
+        }
+      }
+    ],
+    "summary": {
+      "data_rows": 2,
+      "kept": 1,
+      "rejected": 1,
+      "fields": {
+        "name": {
+          "filled": 2,
+          "changes": {},
+          "issues": {}
+        },
+        "phone": {
+          "filled": 1,
+          "changes": {},
+          "issues": {
+            "not_mobile": 1
+          }
+        }
+      }
+    }
+  }
+}

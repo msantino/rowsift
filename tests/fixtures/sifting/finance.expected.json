@@ -1,0 +1,157 @@
+{
+  "fields": [
+    {
+      "key": "name",
+      "kind": "name",
+      "required": true,
+      "aliases": [
+        "nome"
+      ]
+    },
+    {
+      "key": "cpf",
+      "kind": "cpf"
+    },
+    {
+      "key": "amount",
+      "kind": "money",
+      "aliases": [
+        "valor"
+      ]
+    },
+    {
+      "key": "due",
+      "kind": "date",
+      "aliases": [
+        "data"
+      ]
+    },
+    {
+      "key": "email",
+      "kind": "email",
+      "aliases": [
+        "e-mail"
+      ]
+    }
+  ],
+  "expected": {
+    "rows": [
+      {
+        "number": 2,
+        "values": {
+          "name": "Ana Lima",
+          "cpf": "52998224725",
+          "amount": {
+            "decimal": "1234.50"
+          },
+          "due": {
+            "date": "2025-03-05"
+          },
+          "email": "ana@example.test"
+        },
+        "extras": {},
+        "changes": {},
+        "issues": {}
+      },
+      {
+        "number": 3,
+        "values": {
+          "name": "Bia Souza",
+          "cpf": "11144477735",
+          "amount": {
+            "decimal": "80.00"
+          },
+          "due": {
+            "date": "2025-04-01"
+          },
+          "email": null
+        },
+        "extras": {},
+        "changes": {},
+        "issues": {
+          "email": {
+            "code": "invalid_email",
+            "data": {}
+          }
+        }
+      },
+      {
+        "number": 4,
+        "values": {
+          "name": "Caio Dias",
+          "cpf": null,
+          "amount": {
+            "decimal": "10.5"
+          },
+          "due": null,
+          "email": "caio@example.test"
+        },
+        "extras": {},
+        "changes": {},
+        "issues": {
+          "cpf": {
+            "code": "invalid_check_digit",
+            "data": {}
+          },
+          "due": {
+            "code": "invalid_date",
+            "data": {}
+          }
+        }
+      }
+    ],
+    "rejected": [
+      {
+        "number": 5,
+        "field": "name",
+        "issue": {
+          "code": "required_missing",
+          "data": {}
+        }
+      }
+    ],
+    "summary": {
+      "data_rows": 4,
+      "kept": 3,
+      "rejected": 1,
+      "fields": {
+        "name": {
+          "filled": 3,
+          "changes": {},
+          "issues": {
+            "required_missing": 1
+          }
+        },
+        "cpf": {
+          "filled": 2,
+          "changes": {},
+          "issues": {
+            "invalid_check_digit": 1,
+            "invalid_length": 1
+          }
+        },
+        "amount": {
+          "filled": 4,
+          "changes": {},
+          "issues": {}
+        },
+        "due": {
+          "filled": 3,
+          "changes": {
+            "two_digit_year_expanded": 1
+          },
+          "issues": {
+            "invalid_date": 1
+          }
+        },
+        "email": {
+          "filled": 2,
+          "changes": {},
+          "issues": {
+            "invalid_email": 2
+          }
+        }
+      }
+    }
+  }
+}

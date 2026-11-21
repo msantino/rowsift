@@ -38,6 +38,7 @@ Early development. The package is not published yet and the API will change befo
 | Profile | available: the function `rowsift.profile(table)` finds the header, skips rows that are not data with a code, and gives each column a kind with its share, counts, the low-cardinality signal and masked samples. Thresholds are `ProfileOptions` |
 | Clean | available: one cleaner per kind, `clean.value` to dispatch by kind, masking functions |
 | Map | available: `rowsift.suggest(profile, fields)` suggests a column for each `Field` you declare, with a confidence level and reason codes, and lists the columns no field uses. `SavedMapping` and `rowsift.apply_saved` carry a person's choices to the next file without guessing, and `Mapping.assign` and `Mapping.unassign` apply a change |
+| Sift | available: `rowsift.sift(table, profile, mapping, fields)` cleans each data row with the kind of each field and returns the kept rows with their cleaned values, changes and unmapped columns, the rejected rows with the field and issue code, and counts per field of every change and issue code. A row is rejected only when a required field is empty or fails. It has no side effect, so it serves as a preview and as the final pass |
 
 ## Requirements
 

@@ -1,0 +1,91 @@
+{
+  "fields": [
+    {
+      "key": "name",
+      "kind": "name",
+      "required": true
+    },
+    {
+      "key": "phone",
+      "kind": "phone"
+    },
+    {
+      "key": "shift",
+      "kind": "text"
+    }
+  ],
+  "assign": {
+    "name": 0,
+    "phone": 1,
+    "shift": 2
+  },
+  "expected": {
+    "rows": [
+      {
+        "number": 1,
+        "values": {
+          "name": "Ana Lima",
+          "phone": "+5511999990001",
+          "shift": "morning"
+        },
+        "extras": {},
+        "changes": {},
+        "issues": {}
+      },
+      {
+        "number": 2,
+        "values": {
+          "name": "Bia Souza",
+          "phone": "+5511999990002",
+          "shift": "night"
+        },
+        "extras": {},
+        "changes": {},
+        "issues": {}
+      },
+      {
+        "number": 3,
+        "values": {
+          "name": "Caio Dias",
+          "phone": null,
+          "shift": "afternoon"
+        },
+        "extras": {},
+        "changes": {},
+        "issues": {
+          "phone": {
+            "code": "too_short",
+            "data": {
+              "digits": 6
+            }
+          }
+        }
+      }
+    ],
+    "rejected": [],
+    "summary": {
+      "data_rows": 3,
+      "kept": 3,
+      "rejected": 0,
+      "fields": {
+        "name": {
+          "filled": 3,
+          "changes": {},
+          "issues": {}
+        },
+        "phone": {
+          "filled": 2,
+          "changes": {},
+          "issues": {
+            "too_short": 1
+          }
+        },
+        "shift": {
+          "filled": 3,
+          "changes": {},
+          "issues": {}
+        }
+      }
+    }
+  }
+}
