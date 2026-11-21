@@ -1,0 +1,40 @@
+{
+  "rows": [
+    [
+      "Code",
+      "Name",
+      "Phone",
+      "Address, with comma"
+    ],
+    [
+      "1",
+      "JOSÉ ALVES",
+      "(11)98765.4321",
+      "R DAS FLORES, 120"
+    ],
+    [
+      "2",
+      "MARIA GONÇALVES",
+      "(11)91111.2222",
+      "AV CENTRAL, 5"
+    ],
+    [
+      "3",
+      "ANA LIMA",
+      "(11)93333.4444",
+      "PRACA SEM VIRGULA"
+    ]
+  ],
+  "report": {
+    "format": "csv",
+    "encoding": "cp1252",
+    "delimiter": ",",
+    "sheet": null,
+    "sheets": [],
+    "row_count": 4,
+    "column_count": 4,
+    "notes": [
+      "wrapped_lines_unwrapped"
+    ]
+  }
+}

@@ -112,3 +112,53 @@ def test_doubled_quotes_and_a_final_closed_field_carry_no_note() -> None:
 def test_balanced_and_mid_field_quotes_carry_no_note() -> None:
     assert read(b'a,b\n"x, y",5" screen\n').report.notes == ()
     assert read(b'a,b\n"x","y"\n').report.notes == ()
+
+
+def test_every_line_wrapped_in_one_quoted_field_is_unwrapped_cp1252() -> None:
+    table = read(fixture("wrapped", "wrapped_cp1252.csv"))
+    assert table.report.column_count == 4
+    assert table.report.delimiter == ","
+    assert table.report.encoding == "cp1252"
+    assert table.report.notes == (ReadNote.WRAPPED_LINES_UNWRAPPED,)
+    assert table.rows[0] == ("Code", "Name", "Phone", "Address, with comma")
+    assert table.rows[1][1] == "JOSÉ ALVES"
+    assert table.rows[1][3] == "R DAS FLORES, 120"
+
+
+def test_every_line_wrapped_in_one_quoted_field_is_unwrapped_ascii_with_lost_letters() -> None:
+    table = read(fixture("wrapped", "wrapped_ascii_question_marks.csv"))
+    assert table.report.column_count == 4
+    assert table.report.notes == (ReadNote.WRAPPED_LINES_UNWRAPPED,)
+    assert table.rows[1][1] == "JOS? ALVES"
+
+
+def test_a_file_that_really_has_one_quoted_column_stays_one_column() -> None:
+    table = read(fixture("wrapped", "single_column_quoted.csv"))
+    assert table.report.column_count == 1
+    assert table.report.delimiter is None
+    assert table.report.notes == ()
+
+
+def test_wrapped_lines_with_different_column_counts_are_not_unwrapped() -> None:
+    table = read(b'"a,b,c"\n"1,2"\n"3,4,5"\n')
+    assert table.report.column_count == 1
+    assert table.report.notes == ()
+
+
+def test_wrapping_is_not_undone_when_a_line_is_not_wrapped() -> None:
+    table = read(b'"a,b,c"\n1,2,3\n')
+    assert ReadNote.WRAPPED_LINES_UNWRAPPED not in table.report.notes
+
+
+def test_a_wrapped_file_with_a_byte_order_mark_reports_both_notes() -> None:
+    data = b'\xef\xbb\xbf"a;b"\r\n"1;2"\r\n'
+    table = read(data)
+    assert table.rows == (("a", "b"), ("1", "2"))
+    assert table.report.delimiter == ";"
+    assert table.report.notes == (ReadNote.BOM_REMOVED, ReadNote.WRAPPED_LINES_UNWRAPPED)
+
+
+def test_a_single_column_where_every_value_holds_a_delimiter_is_unwrapped_with_the_note() -> None:
+    table = read(b'"Silva, Ana"\n"Souza, Bruno"\n')
+    assert table.report.column_count == 2
+    assert table.report.notes == (ReadNote.WRAPPED_LINES_UNWRAPPED,)

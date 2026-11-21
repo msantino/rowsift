@@ -156,6 +156,7 @@ class ReadNote(StrEnum):
     MERGED_CELLS_FILLED = "merged_cells_filled"
     TRAILING_EMPTY_COLUMNS_DROPPED = "trailing_empty_columns_dropped"
     UNTERMINATED_QUOTE = "unterminated_quote"
+    WRAPPED_LINES_UNWRAPPED = "wrapped_lines_unwrapped"
 
 
 class ErrorCode(StrEnum):

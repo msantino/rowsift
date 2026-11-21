@@ -81,6 +81,7 @@ Something the reader did that the caller may want to know about. Found in `ReadR
 | `merged_cells_filled` | merged cells of a workbook were filled with the value of the top-left cell |
 | `trailing_empty_columns_dropped` | trailing columns empty in every row were dropped |
 | `unterminated_quote` | a quoted field was never closed |
+| `wrapped_lines_unwrapped` | every line of the file was one quoted field, and the wrapping was removed to read the columns inside; `report.delimiter` is the inner delimiter |
 
 ## `ErrorCode`
 
