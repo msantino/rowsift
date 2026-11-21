@@ -7,7 +7,7 @@ from collections import Counter
 from collections.abc import Sequence
 
 from rowsift.map._fields import Field
-from rowsift.map._score import ACCEPTS, Candidate, alias_table, score_column
+from rowsift.map._score import ACCEPTS, Candidate, alias_table, is_line_header, score_column
 from rowsift.map._types import Alternative, Choice, Mapping
 from rowsift.profile import ColumnProfile, Profile
 from rowsift.types import Confidence, Kind, Reason, ReasonCode
@@ -155,7 +155,11 @@ def _only_candidates(
         if field_index in taken_fields or not field.required:
             continue
         accepted = _fallback_kinds(field.kind)
-        remaining = [c for c in columns if c.index not in used and c.filled and c.kind in accepted]
+        remaining = [
+            c
+            for c in columns
+            if c.index not in used and c.filled and c.kind in accepted and not is_line_header(c)
+        ]
         if len(remaining) != 1:
             continue
         column = remaining[0]

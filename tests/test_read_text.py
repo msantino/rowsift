@@ -162,3 +162,27 @@ def test_a_single_column_where_every_value_holds_a_delimiter_is_unwrapped_with_t
     table = read(b'"Silva, Ana"\n"Souza, Bruno"\n')
     assert table.report.column_count == 2
     assert table.report.notes == (ReadNote.WRAPPED_LINES_UNWRAPPED,)
+
+
+def _wrapped_file(data_lines: int, *, odd_line: int | None = None) -> bytes:
+    lines = ["Code,Name,Phone"]
+    for number in range(1, data_lines + 1):
+        lines.append(f"{number},PESSOA {number},(11)9{number:04d}.0000")
+    if odd_line is not None:
+        lines[odd_line] = "only,two"
+    return "".join(f'"{line}"\r\n' for line in lines).encode("cp1252")
+
+
+@pytest.mark.parametrize("data_lines", [3, 99, 100, 101, 200, 470])
+def test_wrapped_lines_are_unwrapped_whatever_the_size_of_the_file(data_lines: int) -> None:
+    table = read(_wrapped_file(data_lines))
+    assert table.report.column_count == 3
+    assert table.report.row_count == data_lines + 1
+    assert table.report.notes == (ReadNote.WRAPPED_LINES_UNWRAPPED,)
+    assert table.rows[-1][1] == f"PESSOA {data_lines}"
+
+
+def test_wrapped_lines_that_turn_inconsistent_after_the_sample_stay_unchanged() -> None:
+    table = read(_wrapped_file(200, odd_line=150))
+    assert table.report.column_count == 1
+    assert table.report.notes == ()
