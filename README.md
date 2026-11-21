@@ -74,7 +74,7 @@ The header was found under a title and a blank line, each column was matched to 
 
 ## Status
 
-Early development, version `0.1.2`. The API can still change between minor versions. Before `1.0.0`, a breaking change raises the minor version. Removing or renaming a public name or a code is a breaking change, and adding a code is a minor change.
+Early development, version `0.1.3`. The API can still change between minor versions. Before `1.0.0`, a breaking change raises the minor version. Removing or renaming a public name or a code is a breaking change, and adding a code is a minor change.
 
 | Step | State |
 |---|---|
