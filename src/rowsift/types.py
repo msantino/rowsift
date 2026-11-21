@@ -33,6 +33,7 @@ __all__ = [
     "LineType",
     "ReadNote",
     "ReadReport",
+    "Reason",
     "ReasonCode",
     "SkipCode",
     "Table",
@@ -234,6 +235,33 @@ class Issue:
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "code", IssueCode(self.code))
+        object.__setattr__(self, "data", _freeze(self.data))
+
+    def __hash__(self) -> int:
+        return _hash_data(self.code, self.data)
+
+    def __reduce__(self) -> tuple[Any, tuple[Any, ...]]:
+        return (type(self), (self.code, dict(self.data)))
+
+
+@dataclass(frozen=True, slots=True)
+class Reason:
+    """Why a column was, or was not, suggested for a field, as a code plus its data.
+
+    ``data`` is copied into a read-only mapping, and the value is hashable.
+    Data values compare as Python compares numbers, so ``1``, ``1.0`` and
+    ``True`` are equal.
+
+    Raises:
+        ValueError: if ``code`` is not a ``ReasonCode``.
+        TypeError: if ``data`` holds a key that is not text or a non-scalar value.
+    """
+
+    code: ReasonCode
+    data: Mapping[str, DataValue] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "code", ReasonCode(self.code))
         object.__setattr__(self, "data", _freeze(self.data))
 
     def __hash__(self) -> int:
