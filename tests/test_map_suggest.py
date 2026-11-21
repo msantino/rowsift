@@ -231,3 +231,19 @@ def test_a_category_field_reads_a_low_cardinality_text_column_as_a_content_fit()
         ReasonCode.HEADER_MATCHES_ALIAS,
         ReasonCode.CONTENT_FITS_KIND,
     ]
+
+
+WHOLE_LINE = "Code,Name,Phone,Celular,Address,City,State"
+
+
+def test_a_column_whose_header_is_a_whole_line_is_the_only_candidate_for_no_field() -> None:
+    field = Field("name", Kind.NAME, required=True)
+    result = suggest(profile(column(0, WHOLE_LINE, Kind.TEXT)), [field])
+    assert result.choices[0].column is None
+    assert result.unmapped == (0,)
+
+
+def test_a_column_whose_header_is_a_whole_line_is_not_taken_for_its_content() -> None:
+    field = Field("phone", Kind.PHONE)
+    result = suggest(profile(column(0, WHOLE_LINE, Kind.PHONE)), [field])
+    assert result.choices[0].column is None

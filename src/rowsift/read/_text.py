@@ -148,14 +148,17 @@ def _ends_inside_quotes(text: str, delimiter: str) -> bool:
     return False
 
 
-def _field_counts(text: str, delimiter: str) -> list[int]:
+def _field_counts(
+    text: str, delimiter: str, *, limit: int | None = _DELIMITER_SAMPLE_RECORDS
+) -> list[int]:
+    """The field count of each non-empty record: the first ``limit`` of them, all if ``None``."""
     counts: list[int] = []
     reader = csv.reader(io.StringIO(text, newline=""), delimiter=delimiter)
     try:
         for record in reader:
             if any(cell.strip() for cell in record):
                 counts.append(len(record))
-                if len(counts) >= _DELIMITER_SAMPLE_RECORDS:
+                if limit is not None and len(counts) >= limit:
                     break
     except csv.Error:
         pass
@@ -222,8 +225,8 @@ def _unwrap_lines(text: str) -> tuple[str, str] | None:
     delimiter = detect_delimiter(inner)
     if delimiter is None:
         return None
-    counts = _field_counts(inner, delimiter)
-    if len(set(counts)) != 1 or len(counts) < len(lines):
+    counts = _field_counts(inner, delimiter, limit=None)
+    if len(set(counts)) != 1 or len(counts) != len(lines):
         return None
     return inner, delimiter
 

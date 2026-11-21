@@ -9,7 +9,7 @@ from rowsift.map._fields import Field
 from rowsift.profile import ColumnProfile, normalize_header
 from rowsift.types import Confidence, Kind, Reason, ReasonCode
 
-__all__ = ["Candidate", "HeaderMatch", "alias_table", "score_column"]
+__all__ = ["Candidate", "HeaderMatch", "alias_table", "is_line_header", "score_column"]
 
 SPECIFIC_KINDS = frozenset(
     {
@@ -92,11 +92,14 @@ cell, not a name, so it matches no alias."""
 _HEADER_DELIMITERS = frozenset(";,|\t")
 
 
+def is_line_header(column: ColumnProfile) -> bool:
+    """Whether the header is a whole line read as one cell rather than a name."""
+    return sum(char in _HEADER_DELIMITERS for char in column.header) > _MAX_DELIMITERS_IN_HEADER
+
+
 def _header_match(column: ColumnProfile, aliases: tuple[str, ...]) -> tuple[HeaderMatch, str, int]:
     """The best match of the header against the aliases: kind, alias, alias tokens."""
-    if not column.header or not column.normalized_header:
-        return HeaderMatch.NONE, "", 0
-    if sum(char in _HEADER_DELIMITERS for char in column.header) > _MAX_DELIMITERS_IN_HEADER:
+    if not column.header or not column.normalized_header or is_line_header(column):
         return HeaderMatch.NONE, "", 0
     header = column.normalized_header
     header_tokens = set(header.split())
@@ -135,7 +138,8 @@ def score_column(
 
     A header signal is an alias equal to the header (exact) or all of whose words
     appear in it (contains). A content signal is the column kind fitting the
-    field kind. ``high`` needs an exact header and fitting content. With no
+    field kind. A column whose header is a whole line (see ``is_line_header``)
+    is a candidate for no field. ``high`` needs an exact header and fitting content. With no
     header signal, only a column whose kind is the field kind, and a kind that
     values alone can reveal, is a candidate: ``medium`` when it is the only
     column and the only field of that kind, ``low`` otherwise.
@@ -144,6 +148,8 @@ def score_column(
     no meaning. ``kind_is_unique`` says whether the field is the only declared
     field of its kind and the column the only column of that kind.
     """
+    if has_header and is_line_header(column):
+        return None
     match, alias, alias_tokens = (
         _header_match(column, aliases) if has_header else (HeaderMatch.NONE, "", 0)
     )
