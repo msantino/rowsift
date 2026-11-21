@@ -107,5 +107,7 @@ assert restored.choices[0].reasons[0].code == "saved_mapping"
 
 ## Limits
 
+- A header with more than two delimiter characters (`;` `,` `|` or tab) is a whole line read as one cell, not a name, so it matches no alias.
+- A `category` field accepts a text column, so a column that profiles as `text` with `low_cardinality` set still counts as a content fit. The profile never reports `category` as a kind.
 - Matching is by header text and by content kind. A header written in a language you did not list as an alias is not matched.
 - `SavedMapping.from_mapping` raises `ValueError` when the mapping was not made from the profile you pass.

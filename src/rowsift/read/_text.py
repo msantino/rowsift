@@ -195,6 +195,39 @@ def _unused_character(text: str) -> str:
     raise UnsupportedFileError()
 
 
+def _unwrap_lines(text: str) -> tuple[str, str] | None:
+    """The text of a file whose every line is one quoted field, and its inner delimiter.
+
+    Some programs re-save a delimited file with each whole line wrapped in one
+    quoted field and the inner quotes doubled. Read as it stands, such a file is
+    a single column. The wrapping is undone only when every non-empty line starts
+    and ends with a quote, every one of them is a single field, and the
+    unwrapped lines split into the same number of fields, at least two, on one
+    delimiter. Anything else returns ``None`` and the file is read unchanged.
+    """
+    lines = [line for line in text.splitlines() if line.strip()]
+    if len(lines) < 2:
+        return None
+    if not all(line.startswith('"') and line.rstrip().endswith('"') for line in lines):
+        return None
+    splitter = _unused_character(text)
+    try:
+        records = list(csv.reader(io.StringIO(text, newline=""), delimiter=splitter))
+    except csv.Error:
+        return None
+    unwrapped = [record[0] for record in records if record and any(cell.strip() for cell in record)]
+    if len(unwrapped) != len(lines) or any(len(record) != 1 for record in records if record):
+        return None
+    inner = "\n".join(unwrapped) + "\n"
+    delimiter = detect_delimiter(inner)
+    if delimiter is None:
+        return None
+    counts = _field_counts(inner, delimiter)
+    if len(set(counts)) != 1 or len(counts) < len(lines):
+        return None
+    return inner, delimiter
+
+
 class DelimitedResult:
     """What reading delimited text produced."""
 
@@ -221,6 +254,13 @@ def read_delimited(data: bytes, limits: ReadLimits) -> DelimitedResult:
     cell is longer than ``max_cell_chars`` the read raises the cell limit error
     instead, because the limit comes first.
 
+    When every line of the file is one quoted field and the unwrapped lines
+    split into the same number of columns on one delimiter, the wrapping is
+    removed and the result carries ``wrapped_lines_unwrapped``. Limit: a file
+    that really has one column, where every value holds the same number of
+    delimiter characters (for example ``"Silva, Ana"`` on every line), cannot be
+    told apart from a wrapped file and is unwrapped too, with the note.
+
     Raises:
         DecodingError: if a byte order mark promises an encoding the bytes do not
             follow, or the text cannot be split into records.
@@ -230,6 +270,12 @@ def read_delimited(data: bytes, limits: ReadLimits) -> DelimitedResult:
     text, encoding, mark_removed = decode(data)
     with _field_limit(limits):
         delimiter = detect_delimiter(text)
+        wrapped = False
+        if delimiter is None:
+            unwrapped = _unwrap_lines(text)
+            if unwrapped is not None:
+                text, delimiter = unwrapped
+                wrapped = True
         splitter = delimiter if delimiter is not None else _unused_character(text)
         collector = RowCollector(limits, trim_trailing_rows=False)
         reader = csv.reader(io.StringIO(text, newline=""), delimiter=splitter)
@@ -243,6 +289,8 @@ def read_delimited(data: bytes, limits: ReadLimits) -> DelimitedResult:
     unterminated = _ends_inside_quotes(text, splitter)
     grid = collector.finish()
     notes = [ReadNote.BOM_REMOVED] if mark_removed else []
+    if wrapped:
+        notes.append(ReadNote.WRAPPED_LINES_UNWRAPPED)
     if unterminated:
         notes.append(ReadNote.UNTERMINATED_QUOTE)
     if grid.columns_dropped:

@@ -1,5 +1,7 @@
 """Suggestions: confidence, reasons, conflicts and unmapped columns."""
 
+import dataclasses
+
 from rowsift.map import Alternative, Field, suggest
 from rowsift.types import Confidence, Kind, Reason, ReasonCode
 from tests.map_helpers import column, profile
@@ -207,3 +209,25 @@ def test_a_required_text_field_does_not_take_any_lone_column_as_only_candidate()
     choice = suggest(profile(column(0, "Quando", Kind.DATE, 0.99)), [field]).choices[0]
     assert choice.column is None
     assert [r.code for r in choice.reasons] == [ReasonCode.REQUIRED_FIELD_UNMATCHED]
+
+
+def test_a_header_that_is_a_whole_line_matches_no_alias() -> None:
+    header = "Code,Name,Phone,Celular principal,Address,City,State"
+    result = suggest(profile(column(0, header)), [PHONE])
+    assert result.choices[0].column is None
+
+
+def test_a_header_with_a_couple_of_delimiters_still_matches() -> None:
+    choice = suggest(profile(column(0, "Celular, principal", Kind.PHONE)), [PHONE]).choices[0]
+    assert choice.column == 0
+
+
+def test_a_category_field_reads_a_low_cardinality_text_column_as_a_content_fit() -> None:
+    low = dataclasses.replace(column(0, "Status", Kind.TEXT), low_cardinality=True)
+    field = Field("status", Kind.CATEGORY, one_of=("active", "inactive"))
+    choice = suggest(profile(low), [field]).choices[0]
+    assert (choice.column, choice.confidence) == (0, Confidence.HIGH)
+    assert [reason.code for reason in choice.reasons] == [
+        ReasonCode.HEADER_MATCHES_ALIAS,
+        ReasonCode.CONTENT_FITS_KIND,
+    ]

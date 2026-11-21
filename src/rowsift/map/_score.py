@@ -85,9 +85,18 @@ def alias_table(field: Field) -> tuple[str, ...]:
     return tuple(dict.fromkeys(alias for alias in folded if alias))
 
 
+_MAX_DELIMITERS_IN_HEADER = 2
+"""A header with more delimiter characters than this is a whole line read as one
+cell, not a name, so it matches no alias."""
+
+_HEADER_DELIMITERS = frozenset(";,|\t")
+
+
 def _header_match(column: ColumnProfile, aliases: tuple[str, ...]) -> tuple[HeaderMatch, str, int]:
     """The best match of the header against the aliases: kind, alias, alias tokens."""
     if not column.header or not column.normalized_header:
+        return HeaderMatch.NONE, "", 0
+    if sum(char in _HEADER_DELIMITERS for char in column.header) > _MAX_DELIMITERS_IN_HEADER:
         return HeaderMatch.NONE, "", 0
     header = column.normalized_header
     header_tokens = set(header.split())
