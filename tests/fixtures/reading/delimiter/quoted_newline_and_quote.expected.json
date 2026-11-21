@@ -1,0 +1,26 @@
+{
+  "rows": [
+    [
+      "Nome",
+      "Nota"
+    ],
+    [
+      "Ana",
+      "linha um\nlinha dois"
+    ],
+    [
+      "Bruno",
+      "disse \"oi\""
+    ]
+  ],
+  "report": {
+    "format": "csv",
+    "encoding": "utf-8",
+    "delimiter": ",",
+    "sheet": null,
+    "sheets": [],
+    "row_count": 3,
+    "column_count": 2,
+    "notes": []
+  }
+}

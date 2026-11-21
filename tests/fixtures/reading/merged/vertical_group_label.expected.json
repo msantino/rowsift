@@ -1,0 +1,38 @@
+{
+  "rows": [
+    [
+      "Group",
+      "Name"
+    ],
+    [
+      "North",
+      "Ana"
+    ],
+    [
+      "North",
+      "Bruno"
+    ],
+    [
+      "North",
+      "Carla"
+    ],
+    [
+      "South",
+      "Dora"
+    ]
+  ],
+  "report": {
+    "format": "xlsx",
+    "encoding": null,
+    "delimiter": null,
+    "sheet": "Sheet1",
+    "sheets": [
+      "Sheet1"
+    ],
+    "row_count": 5,
+    "column_count": 2,
+    "notes": [
+      "merged_cells_filled"
+    ]
+  }
+}

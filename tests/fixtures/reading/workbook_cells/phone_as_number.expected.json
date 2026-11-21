@@ -1,0 +1,25 @@
+{
+  "rows": [
+    [
+      "Phone"
+    ],
+    [
+      "11999990001"
+    ]
+  ],
+  "report": {
+    "format": "xlsx",
+    "encoding": null,
+    "delimiter": null,
+    "sheet": "Sheet1",
+    "sheets": [
+      "Sheet1"
+    ],
+    "row_count": 2,
+    "column_count": 1,
+    "notes": []
+  },
+  "read_args": {
+    "filename": "list.csv"
+  }
+}

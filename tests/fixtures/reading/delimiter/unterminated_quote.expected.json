@@ -1,0 +1,22 @@
+{
+  "rows": [
+    [
+      "name"
+    ],
+    [
+      "abc\nrow2\nrow3\n"
+    ]
+  ],
+  "report": {
+    "format": "csv",
+    "encoding": "utf-8",
+    "delimiter": null,
+    "sheet": null,
+    "sheets": [],
+    "row_count": 2,
+    "column_count": 1,
+    "notes": [
+      "unterminated_quote"
+    ]
+  }
+}

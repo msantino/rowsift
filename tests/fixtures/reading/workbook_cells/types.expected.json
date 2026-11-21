@@ -1,0 +1,43 @@
+{
+  "rows": [
+    [
+      "Name",
+      "Phone",
+      "Joined",
+      "Seen",
+      "Active",
+      "Score",
+      "Full name"
+    ],
+    [
+      "Ana",
+      "11999990001",
+      "2024-03-15",
+      "2024-03-15T13:45:30",
+      "true",
+      "7.5",
+      "Ana Silva"
+    ],
+    [
+      "Bruno",
+      "11999990002",
+      "2023-12-01",
+      "08:00:00",
+      "false",
+      "3",
+      "Bruno Costa"
+    ]
+  ],
+  "report": {
+    "format": "xlsx",
+    "encoding": null,
+    "delimiter": null,
+    "sheet": "People",
+    "sheets": [
+      "People"
+    ],
+    "row_count": 3,
+    "column_count": 7,
+    "notes": []
+  }
+}

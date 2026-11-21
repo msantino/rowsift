@@ -1,0 +1,28 @@
+{
+  "rows": [
+    [
+      "Title",
+      "Title",
+      "Title"
+    ],
+    [
+      "a",
+      "b",
+      "c"
+    ]
+  ],
+  "report": {
+    "format": "xlsx",
+    "encoding": null,
+    "delimiter": null,
+    "sheet": "Sheet1",
+    "sheets": [
+      "Sheet1"
+    ],
+    "row_count": 2,
+    "column_count": 3,
+    "notes": [
+      "merged_cells_filled"
+    ]
+  }
+}

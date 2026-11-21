@@ -1,0 +1,22 @@
+{
+  "rows": [
+    [
+      "Nome",
+      "Cidade"
+    ],
+    [
+      "João",
+      "São Paulo"
+    ]
+  ],
+  "report": {
+    "format": "csv",
+    "encoding": "cp1252",
+    "delimiter": ";",
+    "sheet": null,
+    "sheets": [],
+    "row_count": 2,
+    "column_count": 2,
+    "notes": []
+  }
+}

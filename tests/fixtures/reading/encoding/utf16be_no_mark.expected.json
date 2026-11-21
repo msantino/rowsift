@@ -1,0 +1,22 @@
+{
+  "rows": [
+    [
+      "Nome",
+      "Telefone"
+    ],
+    [
+      "Ana Silva",
+      "11999990001"
+    ]
+  ],
+  "report": {
+    "format": "csv",
+    "encoding": "utf-16-be",
+    "delimiter": "\t",
+    "sheet": null,
+    "sheets": [],
+    "row_count": 2,
+    "column_count": 2,
+    "notes": []
+  }
+}

@@ -34,14 +34,14 @@ Early development. The package is not published yet and the API will change befo
 
 | Step | State |
 |---|---|
-| Read | not started |
+| Read | available: the function `rowsift.read(...)` turns CSV, XLSX and XLS bytes into a grid of text cells and a report, under explicit limits. Import it with `from rowsift import read, ReadLimits`. XLSX and XLS need the `excel` extra |
 | Profile | not started |
 | Clean | available: one cleaner per kind, `clean.value` to dispatch by kind, masking functions |
 | Map | not started |
 
 ## Requirements
 
-Python 3.11 or newer.
+Python 3.11 or newer. The core has no runtime dependency. Reading XLSX and XLS needs the `excel` extra: `pip install "rowsift[excel]"`.
 
 ## Development
 

@@ -1,0 +1,28 @@
+{
+  "rows": [
+    [
+      "Worked"
+    ],
+    [
+      "37:45:30"
+    ],
+    [
+      "08:05:00"
+    ],
+    [
+      "2024-03-15T13:45:30"
+    ]
+  ],
+  "report": {
+    "format": "xls",
+    "encoding": null,
+    "delimiter": null,
+    "sheet": "Hours",
+    "sheets": [
+      "Hours"
+    ],
+    "row_count": 4,
+    "column_count": 1,
+    "notes": []
+  }
+}

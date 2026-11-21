@@ -1,0 +1,24 @@
+{
+  "rows": [
+    [
+      "a",
+      "b"
+    ],
+    [
+      "1",
+      "2"
+    ]
+  ],
+  "report": {
+    "format": "xlsx",
+    "encoding": null,
+    "delimiter": null,
+    "sheet": "Sheet1",
+    "sheets": [
+      "Sheet1"
+    ],
+    "row_count": 2,
+    "column_count": 2,
+    "notes": []
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "rows": [],
+  "report": {
+    "format": "csv",
+    "encoding": "utf-8",
+    "delimiter": null,
+    "sheet": null,
+    "sheets": [],
+    "row_count": 0,
+    "column_count": 0,
+    "notes": []
+  }
+}

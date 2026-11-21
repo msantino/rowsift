@@ -154,6 +154,7 @@ class ReadNote(StrEnum):
     BOM_REMOVED = "bom_removed"
     MERGED_CELLS_FILLED = "merged_cells_filled"
     TRAILING_EMPTY_COLUMNS_DROPPED = "trailing_empty_columns_dropped"
+    UNTERMINATED_QUOTE = "unterminated_quote"
 
 
 class ErrorCode(StrEnum):

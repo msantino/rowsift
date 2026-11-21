@@ -1,0 +1,66 @@
+{
+  "rows": [
+    [
+      "Name",
+      "Phone",
+      "Joined",
+      "Seen",
+      "Active",
+      "Score"
+    ],
+    [
+      "Ana Silva",
+      "11999990001",
+      "2024-03-15",
+      "2024-03-15T13:45:30",
+      "true",
+      "7.5"
+    ],
+    [
+      "Bruno Costa",
+      "11999990002",
+      "2023-12-01",
+      "08:05:00",
+      "false",
+      "3"
+    ],
+    [
+      "North",
+      "a",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "North",
+      "b",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "North",
+      "c",
+      "",
+      "",
+      "",
+      ""
+    ]
+  ],
+  "report": {
+    "format": "xls",
+    "encoding": null,
+    "delimiter": null,
+    "sheet": "People",
+    "sheets": [
+      "People"
+    ],
+    "row_count": 6,
+    "column_count": 6,
+    "notes": [
+      "merged_cells_filled"
+    ]
+  }
+}

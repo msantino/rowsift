@@ -1,0 +1,26 @@
+{
+  "rows": [
+    [
+      "Name"
+    ],
+    [
+      "Carla"
+    ]
+  ],
+  "report": {
+    "format": "xlsx",
+    "encoding": null,
+    "delimiter": null,
+    "sheet": "Other",
+    "sheets": [
+      "People",
+      "Other"
+    ],
+    "row_count": 2,
+    "column_count": 1,
+    "notes": []
+  },
+  "read_args": {
+    "sheet": 1
+  }
+}

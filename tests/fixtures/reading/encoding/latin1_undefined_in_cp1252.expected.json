@@ -1,0 +1,22 @@
+{
+  "rows": [
+    [
+      "Code",
+      "Name"
+    ],
+    [
+      "A",
+      "João"
+    ]
+  ],
+  "report": {
+    "format": "csv",
+    "encoding": "latin-1",
+    "delimiter": ";",
+    "sheet": null,
+    "sheets": [],
+    "row_count": 2,
+    "column_count": 2,
+    "notes": []
+  }
+}

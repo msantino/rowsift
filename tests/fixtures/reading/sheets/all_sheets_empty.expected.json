@@ -1,0 +1,16 @@
+{
+  "rows": [],
+  "report": {
+    "format": "xlsx",
+    "encoding": null,
+    "delimiter": null,
+    "sheet": "One",
+    "sheets": [
+      "One",
+      "Two"
+    ],
+    "row_count": 0,
+    "column_count": 0,
+    "notes": []
+  }
+}

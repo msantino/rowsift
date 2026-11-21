@@ -1,0 +1,6 @@
+{
+  "error": {
+    "type": "LimitExceededError",
+    "limit": "max_decompressed_bytes"
+  }
+}

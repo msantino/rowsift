@@ -1,0 +1,29 @@
+{
+  "rows": [
+    [
+      "Nome",
+      "Endereco",
+      "Cidade"
+    ],
+    [
+      "Ana",
+      "Rua A, 10",
+      "Recife"
+    ],
+    [
+      "Bruno",
+      "Rua B, 20",
+      "Natal"
+    ]
+  ],
+  "report": {
+    "format": "csv",
+    "encoding": "utf-8",
+    "delimiter": ";",
+    "sheet": null,
+    "sheets": [],
+    "row_count": 3,
+    "column_count": 3,
+    "notes": []
+  }
+}
