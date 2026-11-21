@@ -1,0 +1,53 @@
+name: release
+
+# A release is a tag that starts with v. Nothing else triggers this workflow.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build the distribution
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # the next step needs the history of main
+      - uses: astral-sh/setup-uv@v5
+      - uses: extractions/setup-just@v2
+      - name: The tagged commit must be on main
+        run: |
+          git fetch origin main
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main
+      - name: The tag must match the package version
+        run: python3 scripts/check_release_tag.py "$GITHUB_REF_NAME" pyproject.toml
+      - run: uv sync --all-extras
+      - run: just verify
+      - run: just smoke-core
+      - run: just smoke-extras
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  publish:
+    name: publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: pypi
+    permissions:
+      # Trusted publishing: PyPI trusts this workflow's identity, no token is stored.
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@v1.12.4

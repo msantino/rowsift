@@ -28,21 +28,74 @@ Applying a mapping to a file gives typed rows, the rows that were rejected with 
 
 Brazilian conventions are supported from the first version, because that is where the library started: day-first dates, decimal comma, CPF and CNPJ check digits, CEP, and mobile numbers written with or without the ninth digit. Region-specific behavior is selected through options, and the defaults are documented with each function.
 
+## Example
+
+```python
+import rowsift
+
+data = (
+    "Cadastro de clientes\n"
+    "\n"
+    "Nome;Celular;Nascimento\n"
+    "ana souza;(11) 91234-5678;03/04/1990\n"
+    "bruno lima;(11) 9123;15/08/1985\n"
+).encode("utf-8")
+
+table = rowsift.read(data)
+profile = rowsift.profile(table)
+
+fields = [
+    rowsift.Field("name", rowsift.Kind.NAME, required=True, aliases=("Nome",)),
+    rowsift.Field("phone", rowsift.Kind.PHONE, aliases=("Celular",)),
+    rowsift.Field("birthday", rowsift.Kind.DATE, aliases=("Nascimento",)),
+]
+mapping = rowsift.suggest(profile, fields)
+result = rowsift.sift(table, profile, mapping, fields)
+
+assert result.summary.kept == 2
+assert result.rows[0].values["name"] == "Ana Souza"
+assert result.rows[0].values["phone"] == "+5511912345678"
+# A phone number cut short is reported, not completed.
+assert result.rows[1].values["phone"] is None
+assert result.rows[1].issues["phone"].code == "too_short"
+```
+
+The header was found under a title and a blank line, each column was matched to a field, and the second phone number came back with a reason code instead of a guess. The [quick start](https://github.com/msantino/rowsift/blob/main/docs/quick-start.md) walks through the same file step by step.
+
+## Documentation
+
+- [Quick start](https://github.com/msantino/rowsift/blob/main/docs/quick-start.md)
+- [Reading](https://github.com/msantino/rowsift/blob/main/docs/reading.md): formats, encodings, limits, errors
+- [Profiling](https://github.com/msantino/rowsift/blob/main/docs/profiling.md): the header, skipped rows, kinds
+- [Cleaning](https://github.com/msantino/rowsift/blob/main/docs/cleaning.md): one function per kind, options, masking
+- [Mapping](https://github.com/msantino/rowsift/blob/main/docs/mapping.md): suggestions, confidence, saved mappings
+- [Sifting](https://github.com/msantino/rowsift/blob/main/docs/sifting.md): rows, rejections, counts
+- [Codes](https://github.com/msantino/rowsift/blob/main/docs/codes.md): every code and what it means
+
 ## Status
 
-Early development. The package is not published yet and the API will change before `0.1.0`.
+Early development. The package is not published yet and the API will change before `0.1.0`. Before `1.0.0`, a breaking change raises the minor version. Removing or renaming a public name or a code is a breaking change, and adding a code is a minor change.
 
 | Step | State |
 |---|---|
-| Read | available: the function `rowsift.read(...)` turns CSV, XLSX and XLS bytes into a grid of text cells and a report, under explicit limits. Import it with `from rowsift import read, ReadLimits`. XLSX and XLS need the `excel` extra |
-| Profile | available: the function `rowsift.profile(table)` finds the header, skips rows that are not data with a code, and gives each column a kind with its share, counts, the low-cardinality signal and masked samples. Thresholds are `ProfileOptions` |
-| Clean | available: one cleaner per kind, `clean.value` to dispatch by kind, masking functions |
-| Map | available: `rowsift.suggest(profile, fields)` suggests a column for each `Field` you declare, with a confidence level and reason codes, and lists the columns no field uses. `SavedMapping` and `rowsift.apply_saved` carry a person's choices to the next file without guessing, and `Mapping.assign` and `Mapping.unassign` apply a change |
-| Sift | available: `rowsift.sift(table, profile, mapping, fields)` cleans each data row with the kind of each field and returns the kept rows with their cleaned values, changes and unmapped columns, the rejected rows with the field and issue code, and counts per field of every change and issue code. A row is rejected only when a required field is empty or fails. It has no side effect, so it serves as a preview and as the final pass |
+| Read | available: `rowsift.read(...)` turns CSV, XLSX and XLS bytes into a grid of text cells and a report, under explicit limits. XLSX and XLS need the `excel` extra |
+| Profile | available: `rowsift.profile(table)` finds the header, skips rows that are not data with a code, and gives each column a kind with its share, counts, the low-cardinality signal and masked samples |
+| Clean | available: one cleaner per kind, `rowsift.clean.value` to dispatch by kind, masking functions. Phone numbers of a region other than Brazil need the `phone` extra |
+| Map | available: `rowsift.suggest(profile, fields)` suggests a column for each declared `Field`, with a confidence level and reason codes. `SavedMapping` and `rowsift.apply_saved` carry a person's choices to the next file without guessing |
+| Sift | available: `rowsift.sift(table, profile, mapping, fields)` returns the kept rows with their cleaned values and changes, the rejected rows with the field and issue code, and counts per field. It has no side effect, so it serves as a preview and as the final pass |
 
 ## Requirements
 
-Python 3.11 or newer. The core has no runtime dependency. Reading XLSX and XLS needs the `excel` extra: `pip install "rowsift[excel]"`.
+Python 3.11 to 3.14. The core has no runtime dependency.
+
+```bash
+pip install rowsift              # core: CSV and delimited text
+pip install "rowsift[excel]"     # adds XLSX and XLS
+pip install "rowsift[phone]"     # adds phone numbers outside Brazil
+pip install "rowsift[all]"       # every extra
+```
+
+A function that needs an extra that is not installed raises `rowsift.MissingExtraError`, which names the extra.
 
 ## Development
 

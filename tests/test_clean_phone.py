@@ -152,21 +152,25 @@ class _ParseError(Exception):
     pass
 
 
+class _Parsed(str):
+    extension = None
+
+
 def _fake_phonenumbers() -> Any:
     kinds = SimpleNamespace(MOBILE=1, FIXED_LINE=2, OTHER=3)
 
     def parse(text: str, region: str) -> str:
-        if "?" in text:
+        if "999" in text:
             raise _ParseError
-        return text
+        return _Parsed(text)
 
     return SimpleNamespace(
         NumberParseException=_ParseError,
         PhoneNumberType=kinds,
         PhoneNumberFormat=SimpleNamespace(E164="e164"),
         parse=parse,
-        is_valid_number=lambda number: "bad" not in number,
-        number_type=lambda number: kinds.MOBILE if "mobile" in number else kinds.FIXED_LINE,
+        is_valid_number=lambda number: "000" not in number,
+        number_type=lambda number: kinds.MOBILE if "912" in number else kinds.FIXED_LINE,
         format_number=lambda number, fmt: "+" + "".join(c for c in number if c.isdigit()),
     )
 
@@ -174,13 +178,13 @@ def _fake_phonenumbers() -> Any:
 def test_region_with_the_extra_installed(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setitem(sys.modules, "phonenumbers", _fake_phonenumbers())
     options = CleanOptions(region="PT")
-    result = phone("351 912 mobile", options)
-    assert result.value == "+351912"
+    result = phone("351 912 345", options)
+    assert result.value == "+351912345"
     assert result.value.line_type is LineType.MOBILE
-    assert phone("351 21 land", options).value.line_type is LineType.LANDLINE  # type: ignore[union-attr]  # value is set
-    assert code_of("351 bad", options) is IssueCode.INVALID_PHONE
-    assert code_of("351 ?", options) is IssueCode.INVALID_PHONE
-    assert code_of("351 21 land", CleanOptions(region="PT", require_mobile=True)) is (
+    assert phone("351 21 100", options).value.line_type is LineType.LANDLINE  # type: ignore[union-attr]  # value is set
+    assert code_of("351 000", options) is IssueCode.INVALID_PHONE
+    assert code_of("351 999", options) is IssueCode.INVALID_PHONE
+    assert code_of("351 21 100", CleanOptions(region="PT", require_mobile=True)) is (
         IssueCode.NOT_MOBILE
     )
 
@@ -209,3 +213,48 @@ def test_an_eight_digit_mobile_without_the_ninth_digit_option_is_too_short() -> 
     result = phone("11 8888-0042", CleanOptions(insert_ninth_digit=False))
     assert result.issue is not None
     assert result.issue.code is IssueCode.TOO_SHORT
+
+
+def test_the_real_library_cleans_a_us_number() -> None:
+    pytest.importorskip("phonenumbers")
+    result = phone("(212) 555-0123", CleanOptions(region="US"))
+    assert result.value == "+12125550123"
+    assert result.issue is None
+    assert result.value.line_type is None  # a US number can be either, so the library cannot tell
+
+
+@pytest.mark.parametrize("cell", ["+1 212 555 0123 ext 5", "212 555 0123 x99"])
+def test_the_real_library_does_not_drop_an_extension_silently(cell: str) -> None:
+    pytest.importorskip("phonenumbers")
+    result = phone(cell, CleanOptions(region="US"))
+    assert result.value is None
+    assert result.issue is not None
+    assert result.issue.code is IssueCode.INVALID_PHONE
+
+
+@pytest.mark.parametrize(
+    "cell",
+    [
+        "ABC 212 555 0123",
+        "1-800-FLOWERS",
+        "tel: 212 555 0123",
+        "(212) 555-0123 x",
+        "212 555 0123 ext",
+        "212 555 0123 #5",
+    ],
+)
+def test_the_real_library_rejects_text_it_would_alter_or_drop(cell: str) -> None:
+    pytest.importorskip("phonenumbers")
+    result = phone(cell, CleanOptions(region="US"))
+    assert result.value is None
+    assert result.issue is not None
+    assert result.issue.code is IssueCode.INVALID_PHONE
+
+
+def test_other_regions_reject_letters_without_calling_the_library(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fake = _fake_phonenumbers()
+    fake.parse = lambda text, region: pytest.fail("the library must not see letters")
+    monkeypatch.setitem(sys.modules, "phonenumbers", fake)
+    assert code_of("351 912 x5", CleanOptions(region="PT")) is IssueCode.INVALID_PHONE

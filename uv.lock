@@ -442,6 +442,15 @@ wheels = [
 ]
 
 [[package]]
+name = "phonenumbers"
+version = "9.0.44"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ca/8e/ba0442ff8d93cc667c971fb592f5414a562481ff9d86855802719cbe7c00/phonenumbers-9.0.44.tar.gz", hash = "sha256:91f44c4085afcb86418b6339502a0957cd643238fad23dee314ea2008c0eaaa4", size = 2314610, upload-time = "2026-11-20T14:25:04.818Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d2/90/84558cf9f1be59a04f3e76788d65e2c68c980ac0895ec9438fae2ebf2c6c/phonenumbers-9.0.44-py2.py3-none-any.whl", hash = "sha256:8fddbbf98e6b7c4be02f96c132df6b9b1ff6a6976e6a338155bc79c04e5a509e", size = 2596212, upload-time = "2026-11-20T14:24:55.296Z" },
+]
+
+[[package]]
 name = "pluggy"
 version = "1.7.0"
 source = { registry = "https://pypi.org/simple" }
@@ -495,15 +504,24 @@ version = "0.0.0"
 source = { editable = "." }
 
 [package.optional-dependencies]
+all = [
+    { name = "openpyxl" },
+    { name = "phonenumbers" },
+    { name = "xlrd" },
+]
 excel = [
     { name = "openpyxl" },
     { name = "xlrd" },
+]
+phone = [
+    { name = "phonenumbers" },
 ]
 
 [package.dev-dependencies]
 dev = [
     { name = "mypy" },
     { name = "openpyxl" },
+    { name = "phonenumbers" },
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "ruff" },
@@ -514,15 +532,20 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "openpyxl", marker = "extra == 'all'", specifier = ">=3.1,<4" },
     { name = "openpyxl", marker = "extra == 'excel'", specifier = ">=3.1,<4" },
+    { name = "phonenumbers", marker = "extra == 'all'", specifier = ">=8.13,<10" },
+    { name = "phonenumbers", marker = "extra == 'phone'", specifier = ">=8.13,<10" },
+    { name = "xlrd", marker = "extra == 'all'", specifier = ">=2.0.1,<3" },
     { name = "xlrd", marker = "extra == 'excel'", specifier = ">=2.0.1,<3" },
 ]
-provides-extras = ["excel"]
+provides-extras = ["excel", "phone", "all"]
 
 [package.metadata.requires-dev]
 dev = [
     { name = "mypy", specifier = ">=1.13" },
     { name = "openpyxl", specifier = ">=3.1,<4" },
+    { name = "phonenumbers", specifier = ">=8.13,<10" },
     { name = "pytest", specifier = ">=8.3" },
     { name = "pytest-cov", specifier = ">=6.0" },
     { name = "ruff", specifier = ">=0.8" },

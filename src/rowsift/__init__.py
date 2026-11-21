@@ -1,5 +1,16 @@
 """Read spreadsheets written by people and turn them into typed, clean rows."""
 
+from rowsift import clean
+from rowsift.clean import CleanOptions, PhoneNumber
+from rowsift.errors import (
+    DecodingError,
+    ExtraName,
+    LimitExceededError,
+    LimitName,
+    MissingExtraError,
+    RowsiftError,
+    UnsupportedFileError,
+)
 from rowsift.map import (
     Alternative,
     Choice,
@@ -12,31 +23,74 @@ from rowsift.map import (
 from rowsift.profile import ColumnProfile, Profile, ProfileOptions, profile
 from rowsift.read import ReadLimits, read
 from rowsift.sift import FieldSummary, Rejection, SiftedRow, SiftResult, Summary, sift
-from rowsift.types import Confidence, Kind, Reason, ReasonCode
+from rowsift.types import (
+    Change,
+    ChangeCode,
+    Cleaned,
+    Confidence,
+    DataValue,
+    DayMonth,
+    ErrorCode,
+    FileFormat,
+    Issue,
+    IssueCode,
+    Kind,
+    LineType,
+    ReadNote,
+    ReadReport,
+    Reason,
+    ReasonCode,
+    SkipCode,
+    Table,
+)
 
 __version__ = "0.0.0"
 
 __all__ = [
     "Alternative",
+    "Change",
+    "ChangeCode",
     "Choice",
+    "CleanOptions",
+    "Cleaned",
     "ColumnProfile",
     "Confidence",
+    "DataValue",
+    "DayMonth",
+    "DecodingError",
+    "ErrorCode",
+    "ExtraName",
     "Field",
     "FieldSummary",
+    "FileFormat",
+    "Issue",
+    "IssueCode",
     "Kind",
+    "LimitExceededError",
+    "LimitName",
+    "LineType",
     "Mapping",
+    "MissingExtraError",
+    "PhoneNumber",
     "Profile",
     "ProfileOptions",
     "ReadLimits",
+    "ReadNote",
+    "ReadReport",
     "Reason",
     "ReasonCode",
     "Rejection",
+    "RowsiftError",
     "SavedMapping",
     "SiftResult",
     "SiftedRow",
+    "SkipCode",
     "Summary",
+    "Table",
+    "UnsupportedFileError",
     "__version__",
     "apply_saved",
+    "clean",
     "profile",
     "read",
     "sift",

@@ -29,15 +29,19 @@ dependencies = []
 
 [project.optional-dependencies]
 excel = ["openpyxl>=3.1,<4", "xlrd>=2.0.1,<3"]
+phone = ["phonenumbers>=8.13,<10"]
+all = ["openpyxl>=3.1,<4", "xlrd>=2.0.1,<3", "phonenumbers>=8.13,<10"]
 
 [project.urls]
 Repository = "https://github.com/msantino/rowsift"
 Issues = "https://github.com/msantino/rowsift/issues"
+Documentation = "https://github.com/msantino/rowsift/tree/main/docs"
 
 [dependency-groups]
 dev = [
   "mypy>=1.13",
   "openpyxl>=3.1,<4",
+  "phonenumbers>=8.13,<10",
   "pytest>=8.3",
   "pytest-cov>=6.0",
   "ruff>=0.8",

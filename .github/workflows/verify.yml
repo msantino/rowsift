@@ -29,5 +29,30 @@ jobs:
         with:
           enable-cache: true
       - uses: extractions/setup-just@v2
-      - run: uv sync
+      # Every extra and the dev tools: the test suite runs against the real
+      # workbook readers and the real phone library. `just verify` also runs
+      # the suite again on the core alone (`just test-core`), and the install
+      # job below checks the built wheel.
+      - run: uv sync --all-extras
       - run: just verify
+
+  install:
+    name: install the wheel (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12", "3.13", "3.14"]
+    env:
+      UV_PYTHON: ${{ matrix.python }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - uses: extractions/setup-just@v2
+      - name: The core alone, with no optional dependency
+        run: just smoke-core
+      - name: Every extra installed
+        run: just smoke-extras

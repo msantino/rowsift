@@ -23,6 +23,10 @@ _COUNTRY_CODE = "55"
 _MIN_NUMBER_DIGITS = 8
 _SPLIT = re.compile(r"\s*[/;|,\n\r]\s*|\s+(?:ou|e|or|and)\s+", re.IGNORECASE)
 _FORMATTING = re.compile(r"[\s().\-+]")
+# What another region may write around the digits. Anything else (letters, a
+# vanity number, "tel:", an extension marker) would be altered or dropped by the
+# phone library without a trace, so the fragment is rejected instead.
+_PLAIN_FRAGMENT = re.compile(r"[0-9\s().\-+]+")
 
 
 class PhoneNumber(str):
@@ -110,11 +114,15 @@ def _elsewhere(
     segment: str, options: CleanOptions
 ) -> tuple[PhoneNumber, tuple[Change, ...]] | Issue:
     library = _load_library()
+    if not _PLAIN_FRAGMENT.fullmatch(segment):
+        return Issue(IssueCode.INVALID_PHONE)
     try:
         parsed = library.parse(segment, options.region)
     except library.NumberParseException:
         return Issue(IssueCode.INVALID_PHONE)
     if not library.is_valid_number(parsed):
+        return Issue(IssueCode.INVALID_PHONE)
+    if parsed.extension:  # defense in depth: the fragment check already rules markers out
         return Issue(IssueCode.INVALID_PHONE)
     kind = library.number_type(parsed)
     line_type: LineType | None = None
@@ -150,8 +158,13 @@ def phone(value: str, options: CleanOptions | None = None) -> Cleaned[PhoneNumbe
     ``multiple_values`` with the count of fragments that have at least 8 digits
     (an extension such as ``ramal 12`` after a separator is not counted). An
     extension written in the same fragment as the number, as in
-    ``(11) 99999-0042 ramal 12``, is the issue ``invalid_phone``. If none is
-    valid the issue is the first number's.
+    ``(11) 99999-0042 ramal 12``, is the issue ``invalid_phone``, and so is an
+    extension in another region (``212 555 0123 x99``). For another region a
+    fragment may hold only digits, spaces and ``( ) . - +``: letters, a vanity
+    number (``1-800-FLOWERS``), a prefix such as ``tel:``, and a dangling
+    extension marker are ``invalid_phone`` too, because the ``phone`` extra
+    would otherwise alter or drop them silently. If none is valid the issue is
+    the first number's.
 
     The result's value is a ``str`` with a ``line_type`` attribute. For another
     region the ``phone`` extra is used, and ``MissingExtraError`` is raised when
