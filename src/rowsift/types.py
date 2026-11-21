@@ -101,6 +101,8 @@ class ChangeCode(StrEnum):
     LEADING_ZEROS_RESTORED = "leading_zeros_restored"
     SEPARATOR_INFERRED = "separator_inferred"
     CASE_CHANGED = "case_changed"
+    SERIAL_DATE_CONVERTED = "serial_date_converted"
+    TIME_DEFAULTED = "time_defaulted"
 
 
 class IssueCode(StrEnum):
@@ -117,6 +119,10 @@ class IssueCode(StrEnum):
     INVALID_EMAIL = "invalid_email"
     NOT_IN_ALLOWED_VALUES = "not_in_allowed_values"
     REQUIRED_MISSING = "required_missing"
+    INVALID_PHONE = "invalid_phone"
+    INVALID_LENGTH = "invalid_length"
+    NOT_A_TIME = "not_a_time"
+    NOT_A_BOOLEAN = "not_a_boolean"
 
 
 class ReasonCode(StrEnum):

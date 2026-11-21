@@ -36,7 +36,7 @@ Early development. The package is not published yet and the API will change befo
 |---|---|
 | Read | not started |
 | Profile | not started |
-| Clean | not started |
+| Clean | available: one cleaner per kind, `clean.value` to dispatch by kind, masking functions |
 | Map | not started |
 
 ## Requirements
