@@ -59,6 +59,7 @@ Every exception derives from `rowsift.RowsiftError` and carries a `code`. A mess
 | Exception | Code | When |
 |---|---|---|
 | `rowsift.UnsupportedFileError` | `unsupported_file` | the bytes are no supported format, such as a ZIP archive that is no workbook or binary data |
+| `rowsift.UnsupportedFileError` | `password_protected` | the workbook is encrypted with a password. The library does not open it, and the application can ask for a copy without the password |
 | `rowsift.UnsupportedFileError` | `sheet_not_found` | the requested sheet does not exist, or any sheet was requested of delimited text |
 | `rowsift.LimitExceededError` | `limit_exceeded` | a limit above was exceeded. `limit` names it and `allowed` holds its value |
 | `rowsift.MissingExtraError` | `missing_extra` | a workbook was read without the `excel` extra. `extra` names what to install |

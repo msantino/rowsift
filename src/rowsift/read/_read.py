@@ -46,8 +46,9 @@ def read(
         LimitExceededError: if the input, the rows, the columns, a cell or the
             decompressed size of a workbook go beyond the limits.
         MissingExtraError: if a workbook is read without the ``excel`` extra.
-        UnsupportedFileError: if the bytes are no supported format, or the sheet
-            does not exist (``sheet_not_found``).
+        UnsupportedFileError: if the bytes are no supported format, the sheet
+            does not exist (``sheet_not_found``) or the workbook is encrypted
+            with a password (``password_protected``).
         DecodingError: if a byte order mark promises an encoding the bytes do not
             follow, or the delimited text cannot be split into records.
         TypeError: if an argument has the wrong type.

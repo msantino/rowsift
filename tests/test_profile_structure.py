@@ -1,5 +1,7 @@
 """Header detection and skipped rows."""
 
+import pytest
+
 from rowsift.profile import ProfileOptions, profile
 from rowsift.types import SkipCode
 from tests.profile_helpers import phone, table
@@ -75,6 +77,44 @@ def test_trailing_total_rows() -> None:
         (4, SkipCode.TOTAL_ROW),
         (5, SkipCode.EMPTY),
     ]
+    assert result.data_rows == 2
+
+
+@pytest.mark.parametrize(
+    "label", ["Total: 25", "TOTAL: 1.234,50", "Subtotal - 3", "Total geral: 12"]
+)
+def test_a_total_word_followed_by_a_count_in_one_cell_is_a_total_row(label: str) -> None:
+    rows = [("Item", "Amount"), ("Pen", "1"), ("Ink", "2"), ("", ""), (label, "")]
+    result = profile(table(*rows))
+    assert [(s.index, s.code) for s in result.skipped_rows] == [
+        (3, SkipCode.EMPTY),
+        (4, SkipCode.TOTAL_ROW),
+    ]
+    assert result.data_rows == 2
+
+
+def test_a_total_word_hyphen_and_a_year_is_a_total_row() -> None:
+    rows = [("Item", "Amount"), ("Pen", "1"), ("Ink", "2"), ("Total - 2024", "")]
+    result = profile(table(*rows))
+    assert [(s.index, s.code) for s in result.skipped_rows] == [(3, SkipCode.TOTAL_ROW)]
+
+
+@pytest.mark.parametrize(
+    "label",
+    [
+        "Total de vendas: 25",
+        "Totally 25",
+        "Total: 25 itens",
+        "Total 2024",
+        "Sum 3",
+        "Total \u2013 3",
+        "Total: -5",
+    ],
+)
+def test_a_total_word_followed_by_other_text_is_data(label: str) -> None:
+    rows = [("Item", "Amount"), ("Pen", "1"), (label, "")]
+    result = profile(table(*rows))
+    assert result.skipped_rows == ()
     assert result.data_rows == 2
 
 

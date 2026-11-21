@@ -22,6 +22,8 @@ _AREA_CODES = frozenset(int(code) for code in _AREA_CODE_LIST.split())
 _COUNTRY_CODE = "55"
 _MIN_NUMBER_DIGITS = 8
 _SPLIT = re.compile(r"\s*[/;|,\n\r]\s*|\s+(?:ou|e|or|and)\s+", re.IGNORECASE)
+# A long number a spreadsheet turned into a float: its comma is a decimal mark, not a separator.
+_SCIENTIFIC = re.compile(r"\s*\d+(?:[.,]\d+)?[eE][+-]?\d+\s*")
 _FORMATTING = re.compile(r"[\s().\-+]")
 # What another region may write around the digits. Anything else (letters, a
 # vanity number, "tel:", an extension marker) would be altered or dropped by the
@@ -177,6 +179,8 @@ def phone(value: str, options: CleanOptions | None = None) -> Cleaned[PhoneNumbe
     options = options or CleanOptions()
     if options.region != "BR":
         _load_library()  # fail on a missing extra whatever the cell holds
+    if _SCIENTIFIC.fullmatch(value):
+        return fail(IssueCode.INVALID_PHONE)
     candidates = [part for part in _SPLIT.split(value) if any(c.isdigit() for c in part)]
     if not candidates:
         if not value.strip():

@@ -99,8 +99,8 @@ def test_base_error_needs_an_error_code() -> None:
         RowsiftError("x")  # type: ignore[arg-type]  # proving the runtime check
 
 
-def test_unsupported_file_accepts_only_its_two_codes() -> None:
-    with pytest.raises(ValueError, match="unsupported_file or sheet_not_found"):
+def test_unsupported_file_accepts_only_its_three_codes() -> None:
+    with pytest.raises(ValueError, match="unsupported_file, sheet_not_found or password_protected"):
         UnsupportedFileError(ErrorCode.LIMIT_EXCEEDED)
 
 

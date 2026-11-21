@@ -90,6 +90,7 @@ The code carried by every exception the library raises on purpose.
 |---|---|
 | `unsupported_file` | the bytes are no supported format |
 | `sheet_not_found` | the requested sheet does not exist |
+| `password_protected` | the workbook is encrypted with a password |
 | `limit_exceeded` | a read limit was exceeded |
 | `missing_extra` | a feature needs an extra that is not installed |
 | `decoding_failed` | the text could not be decoded |
@@ -101,7 +102,7 @@ Every exception derives from `RowsiftError` and carries a `code`. Messages never
 | Exception | Code | Attributes |
 |---|---|---|
 | `RowsiftError` | any | `code` |
-| `UnsupportedFileError` | `unsupported_file` or `sheet_not_found` | |
+| `UnsupportedFileError` | `unsupported_file`, `sheet_not_found` or `password_protected` | |
 | `LimitExceededError` | `limit_exceeded` | `limit`, `allowed` |
 | `MissingExtraError` | `missing_extra` | `extra` |
 | `DecodingError` | `decoding_failed` | |

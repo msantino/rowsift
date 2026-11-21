@@ -163,6 +163,7 @@ class ErrorCode(StrEnum):
 
     UNSUPPORTED_FILE = "unsupported_file"
     SHEET_NOT_FOUND = "sheet_not_found"
+    PASSWORD_PROTECTED = "password_protected"
     LIMIT_EXCEEDED = "limit_exceeded"
     MISSING_EXTRA = "missing_extra"
     DECODING_FAILED = "decoding_failed"

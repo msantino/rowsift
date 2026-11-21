@@ -112,7 +112,6 @@ def test_fewer_digits_than_any_valid_form(raw: str) -> None:
 @pytest.mark.parametrize(
     "raw",
     [
-        "1.1E+10",
         "call me",
         "(11) 4999-00420",
         "+1 415 555 0100",
@@ -258,3 +257,13 @@ def test_other_regions_reject_letters_without_calling_the_library(
     fake.parse = lambda text, region: pytest.fail("the library must not see letters")
     monkeypatch.setitem(sys.modules, "phonenumbers", fake)
     assert code_of("351 912 x5", CleanOptions(region="PT")) is IssueCode.INVALID_PHONE
+
+
+@pytest.mark.parametrize("raw", ["1.1E+10", "5,5119E+12", "5.5119e+12", " 5,5119E+12 "])
+def test_a_scientific_notation_cell_is_an_invalid_phone_not_a_reading_of_its_digits(
+    raw: str,
+) -> None:
+    result = phone(raw)
+    assert result.value is None
+    assert result.issue is not None
+    assert result.issue.code is IssueCode.INVALID_PHONE

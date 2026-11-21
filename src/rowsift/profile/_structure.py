@@ -94,9 +94,24 @@ def _is_header(
     return False
 
 
+# A total word, then a colon or hyphen, then a count: "Total: 25", "Subtotal - 3".
+_TOTAL_WITH_COUNT = re.compile(r"\s*(?P<word>[^\d:\-]+?)\s*[:\-]\s*\d[\d.,]*\s*")
+
+
 def _is_total(row: tuple[str, ...]) -> bool:
+    """Whether the first filled cell is a total word, alone or followed by a count.
+
+    ``Total`` and ``Total: 25`` qualify. The count needs a colon or a hyphen
+    after the word, so a label such as ``Total 2024`` is data. Only the ASCII
+    colon and hyphen separate: ``Total - 2024`` is a total row, while
+    ``Total`` followed by an en dash and a count, and ``Total: -5`` are data. A total word
+    followed by anything but a count (``Total de vendas``) does not qualify.
+    """
     first = next((cell for cell in row if cell.strip()), "")
-    return normalize_header(first) in _TOTAL_WORDS
+    if normalize_header(first) in _TOTAL_WORDS:
+        return True
+    match = _TOTAL_WITH_COUNT.fullmatch(first)
+    return match is not None and normalize_header(match["word"]) in _TOTAL_WORDS
 
 
 def find_structure(rows: tuple[tuple[str, ...], ...], options: ProfileOptions) -> Structure:

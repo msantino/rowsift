@@ -34,7 +34,11 @@ ExtraName = Literal["excel", "phone"]
 """The optional extras. Constants only, never a value taken from a file."""
 
 
-_UNSUPPORTED_CODES = (ErrorCode.UNSUPPORTED_FILE, ErrorCode.SHEET_NOT_FOUND)
+_UNSUPPORTED_CODES = (
+    ErrorCode.UNSUPPORTED_FILE,
+    ErrorCode.SHEET_NOT_FOUND,
+    ErrorCode.PASSWORD_PROTECTED,
+)
 
 
 class RowsiftError(Exception):
@@ -59,13 +63,14 @@ class RowsiftError(Exception):
 class UnsupportedFileError(RowsiftError):
     """The bytes are no supported format, or a requested sheet does not exist.
 
-    The code is ``unsupported_file`` by default and ``sheet_not_found`` when a
-    named sheet is absent.
+    The code is ``unsupported_file`` by default, ``sheet_not_found`` when a
+    named sheet is absent and ``password_protected`` when the workbook is
+    encrypted with a password, which the library does not open.
     """
 
     def __init__(self, code: ErrorCode = ErrorCode.UNSUPPORTED_FILE) -> None:
         if code not in _UNSUPPORTED_CODES:
-            raise ValueError("code must be unsupported_file or sheet_not_found")
+            raise ValueError("code must be unsupported_file, sheet_not_found or password_protected")
         super().__init__(code)
 
 

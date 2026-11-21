@@ -1,0 +1,66 @@
+{
+  "fields": [
+    {
+      "key": "name",
+      "kind": "name",
+      "required": true
+    },
+    {
+      "key": "phone",
+      "kind": "phone",
+      "required": true
+    }
+  ],
+  "expected": {
+    "rows": [
+      {
+        "number": 4,
+        "values": {
+          "name": "Ana Lima",
+          "phone": "+5511999990001"
+        },
+        "extras": {},
+        "changes": {},
+        "issues": {}
+      },
+      {
+        "number": 5,
+        "values": {
+          "name": "Bia Souza",
+          "phone": "+5511999990002"
+        },
+        "extras": {},
+        "changes": {},
+        "issues": {}
+      },
+      {
+        "number": 6,
+        "values": {
+          "name": "Caio Dias",
+          "phone": "+551133330003"
+        },
+        "extras": {},
+        "changes": {},
+        "issues": {}
+      }
+    ],
+    "rejected": [],
+    "summary": {
+      "data_rows": 3,
+      "kept": 3,
+      "rejected": 0,
+      "fields": {
+        "name": {
+          "filled": 3,
+          "changes": {},
+          "issues": {}
+        },
+        "phone": {
+          "filled": 3,
+          "changes": {},
+          "issues": {}
+        }
+      }
+    }
+  }
+}
